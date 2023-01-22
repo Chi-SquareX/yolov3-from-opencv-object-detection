@@ -16,6 +16,8 @@ class_names_path = os.path.join('.', 'model', 'classes.names')
 input_dir = "data"
 output_dir = "results"
 for img_name in os.listdir(os.path.join(".", input_dir)):
+    print("_____________________________________________________________")
+    print("Image Name: ", img_name)
     img_path = os.path.join(".", input_dir, img_name)
 
     # img_path = './pexels-diana-huggins-615369.jpg'
@@ -88,7 +90,6 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
         license_plate_gray = cv2.cvtColor(license_plate, cv2.COLOR_BGR2GRAY)
         _, license_plate_threshold = cv2.threshold(license_plate_gray, 64, 255, cv2.THRESH_BINARY_INV)
         output = reader.readtext(license_plate_threshold)
-        print("_____________________________________________________________")
         print(output)
         print("________________________________________")
         for out in output:
