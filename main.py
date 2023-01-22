@@ -77,7 +77,7 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
         #             7,
         #             (0, 255, 0),
         #             15)
-        license_plate = img[int(yc - (h / 2)):int(yc + (h / 2)), int(xc - (w / 2)):int(xc + (w / 2)), :]
+        license_plate = img[int(yc - (h / 2)):int(yc + (h / 2)), int(xc - (w / 2)):int(xc + (w / 2)), :].copy()
         img = cv2.rectangle(img,
                             (int(xc - (w / 2)), int(yc - (h / 2))),
                             (int(xc + (w / 2)), int(yc + (h / 2))),
