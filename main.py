@@ -12,72 +12,76 @@ model_cfg_path = os.path.join('.', 'model', 'cfg', 'yolov3.cfg')
 model_weights_path = os.path.join('.', 'model', 'weights', 'yolov3.weights')
 class_names_path = os.path.join('.', 'model', 'classes.names')
 
-img_path = './pexels-diana-huggins-615369.jpg'
+input_dir = "data"
+for img_name in os.listdir(os.path.join(".", input_dir)):
+    img_path = os.path.join(".", input_dir, img_name)
 
-# load class names
-with open(class_names_path, 'r') as f:
-    class_names = [j[:-1] for j in f.readlines() if len(j) > 2]
-    f.close()
+    # img_path = './pexels-diana-huggins-615369.jpg'
 
-# load model
-net = cv2.dnn.readNetFromDarknet(model_cfg_path, model_weights_path)
+    # load class names
+    with open(class_names_path, 'r') as f:
+        class_names = [j[:-1] for j in f.readlines() if len(j) > 2]
+        f.close()
 
-# load image
+    # load model
+    net = cv2.dnn.readNetFromDarknet(model_cfg_path, model_weights_path)
 
-img = cv2.imread(img_path)
+    # load image
 
-H, W, _ = img.shape
+    img = cv2.imread(img_path)
 
-# convert image
-blob = cv2.dnn.blobFromImage(img, 1 / 255, (320, 320), (0, 0, 0), True)
+    H, W, _ = img.shape
 
-# get detections
-net.setInput(blob)
+    # convert image
+    blob = cv2.dnn.blobFromImage(img, 1 / 255, (416, 416), (0, 0, 0), True)
 
-detections = util.get_outputs(net)
+    # get detections
+    net.setInput(blob)
 
-# bboxes, class_ids, confidences
-bboxes = []
-class_ids = []
-scores = []
+    detections = util.get_outputs(net)
 
-for detection in detections:
-    # [x1, x2, x3, x4, x5, x6, ..., x85]
-    bbox = detection[:4]
+    # bboxes, class_ids, confidences
+    bboxes = []
+    class_ids = []
+    scores = []
 
-    xc, yc, w, h = bbox
-    bbox = [int(xc * W), int(yc * H), int(w * W), int(h * H)]
+    for detection in detections:
+        # [x1, x2, x3, x4, x5, x6, ..., x85]
+        bbox = detection[:4]
 
-    bbox_confidence = detection[4]
+        xc, yc, w, h = bbox
+        bbox = [int(xc * W), int(yc * H), int(w * W), int(h * H)]
 
-    class_id = np.argmax(detection[5:])
-    score = np.amax(detection[5:])
+        bbox_confidence = detection[4]
 
-    bboxes.append(bbox)
-    class_ids.append(class_id)
-    scores.append(score)
+        class_id = np.argmax(detection[5:])
+        score = np.amax(detection[5:])
 
-# apply nms
-bboxes, class_ids, scores = util.NMS(bboxes, class_ids, scores)
+        bboxes.append(bbox)
+        class_ids.append(class_id)
+        scores.append(score)
 
-# plot
+    # apply nms
+    bboxes, class_ids, scores = util.NMS(bboxes, class_ids, scores)
 
-for bbox_, bbox in enumerate(bboxes):
-    xc, yc, w, h = bbox
+    # plot
 
-    # cv2.putText(img,
-    #             class_names[class_ids[bbox_]],
-    #             (int(xc - (w / 2)), int(yc + (h / 2) - 20)),
-    #             cv2.FONT_HERSHEY_SIMPLEX,
-    #             7,
-    #             (0, 255, 0),
-    #             15)
-    img = cv2.rectangle(img,
-                        (int(xc - (w / 2)), int(yc - (h / 2))),
-                        (int(xc + (w / 2)), int(yc + (h / 2))),
-                        (0, 255, 0),
-                        10)
+    for bbox_, bbox in enumerate(bboxes):
+        xc, yc, w, h = bbox
 
-plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-plt.savefig("result.jpg")
-plt.show()
+        # cv2.putText(img,
+        #             class_names[class_ids[bbox_]],
+        #             (int(xc - (w / 2)), int(yc + (h / 2) - 20)),
+        #             cv2.FONT_HERSHEY_SIMPLEX,
+        #             7,
+        #             (0, 255, 0),
+        #             15)
+        img = cv2.rectangle(img,
+                            (int(xc - (w / 2)), int(yc - (h / 2))),
+                            (int(xc + (w / 2)), int(yc + (h / 2))),
+                            (0, 255, 0),
+                            10)
+
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    plt.savefig("result.jpg")
+    plt.show()
