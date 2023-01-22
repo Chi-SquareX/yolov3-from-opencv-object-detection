@@ -82,7 +82,13 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
                             (int(xc + (w / 2)), int(yc + (h / 2))),
                             (0, 255, 0),
                             10)
+        license_plate = img[int(yc - (h / 2)):int(yc + (h / 2)), int(xc - (w / 2)):int(xc + (w / 2)), :]
 
+    plt.figure()
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     plt.savefig(os.path.join(".", output_dir, img_name.split(".")[0]) + "_detected" + ".jpg")
+
+    plt.figure()
+    plt.imshow(cv2.cvtColor(license_plate, cv2.COLOR_BGR2RGB))
+    plt.savefig(os.path.join(".", output_dir, img_name.split(".")[0]) + "_detected_plate" + ".jpg")
     plt.show()
