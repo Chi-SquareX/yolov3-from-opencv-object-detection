@@ -13,6 +13,7 @@ model_weights_path = os.path.join('.', 'model', 'weights', 'yolov3.weights')
 class_names_path = os.path.join('.', 'model', 'classes.names')
 
 input_dir = "data"
+output_dir = "results"
 for img_name in os.listdir(os.path.join(".", input_dir)):
     img_path = os.path.join(".", input_dir, img_name)
 
@@ -83,5 +84,5 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
                             10)
 
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    plt.savefig("result.jpg")
+    plt.savefig(os.path.join(".", output_dir, img_name.split(".")[0]) + "_detected" + ".jpg")
     plt.show()
