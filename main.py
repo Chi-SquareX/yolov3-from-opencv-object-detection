@@ -85,9 +85,15 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
                             (int(xc + (w / 2)), int(yc + (h / 2))),
                             (0, 255, 0),
                             10)
-        
-        output = reader.readtext(license_plate)
+        license_plate_gray = cv2.cvtColor(license_plate, cv2.COLOR_BGR2GRAY)
+        _, license_plate_threshold = cv2.threshold(license_plate_gray, 64, 255, cv2.THRESH_BINARY_INV)
+        output = reader.readtext(license_plate_threshold)
+        print("_____________________________________________________________")
         print(output)
+        print("________________________________________")
+        for out in output:
+            text_bbox, text, text_score = out
+            print(text, text_score)
 
     plt.figure()
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
