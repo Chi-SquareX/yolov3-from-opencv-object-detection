@@ -3,6 +3,7 @@ import os
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import easyocr
 
 import util
 
@@ -66,6 +67,7 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
     bboxes, class_ids, scores = util.NMS(bboxes, class_ids, scores)
 
     # plot
+    reader = easyocr.Reader(['en'])
 
     for bbox_, bbox in enumerate(bboxes):
         xc, yc, w, h = bbox
@@ -77,13 +79,15 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
         #             7,
         #             (0, 255, 0),
         #             15)
-        license_plate = img[int(yc - (h / 2)):int(yc + (h / 2)), int(xc - (w / 2)):int(xc + (w / 2)), :].copy()
+        license_plate = img[int(yc - (h / 2)):int(yc + (h / 2)), int(xc - (w / 2)):int(xc + (w / 2)), :]
         img = cv2.rectangle(img,
                             (int(xc - (w / 2)), int(yc - (h / 2))),
                             (int(xc + (w / 2)), int(yc + (h / 2))),
                             (0, 255, 0),
                             10)
         
+        output = reader.readtext(license_plate)
+        print(output)
 
     plt.figure()
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
