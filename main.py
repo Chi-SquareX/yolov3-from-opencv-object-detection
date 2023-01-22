@@ -10,7 +10,7 @@ import util
 # define constants
 model_cfg_path = os.path.join('.', 'model', 'cfg', 'yolov3.cfg')
 model_weights_path = os.path.join('.', 'model', 'weights', 'yolov3.weights')
-class_names_path = os.path.join('.', 'model', 'class.names')
+class_names_path = os.path.join('.', 'model', 'classes.names')
 
 img_path = './pexels-diana-huggins-615369.jpg'
 
@@ -65,13 +65,13 @@ bboxes, class_ids, scores = util.NMS(bboxes, class_ids, scores)
 for bbox_, bbox in enumerate(bboxes):
     xc, yc, w, h = bbox
 
-    cv2.putText(img,
-                class_names[class_ids[bbox_]],
-                (int(xc - (w / 2)), int(yc + (h / 2) - 20)),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                7,
-                (0, 255, 0),
-                15)
+    # cv2.putText(img,
+    #             class_names[class_ids[bbox_]],
+    #             (int(xc - (w / 2)), int(yc + (h / 2) - 20)),
+    #             cv2.FONT_HERSHEY_SIMPLEX,
+    #             7,
+    #             (0, 255, 0),
+    #             15)
     img = cv2.rectangle(img,
                         (int(xc - (w / 2)), int(yc - (h / 2))),
                         (int(xc + (w / 2)), int(yc + (h / 2))),
@@ -79,4 +79,5 @@ for bbox_, bbox in enumerate(bboxes):
                         10)
 
 plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+plt.savefig("result.jpg")
 plt.show()
