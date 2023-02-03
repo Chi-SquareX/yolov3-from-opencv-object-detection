@@ -102,5 +102,5 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
 
     plt.figure()
     plt.imshow(cv2.cvtColor(license_plate, cv2.COLOR_BGR2RGB))
-    plt.savefig(os.path.join(".", output_dir, img_name.split(".")[0]) + "_detected_plate" + ".jpg")
+    plt.savefig(os.path.join(".", output_dir, "cropped_images", img_name.split(".")[0]) + "_detected_plate" + ".jpg")
     plt.show()
