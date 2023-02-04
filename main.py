@@ -13,7 +13,7 @@ model_cfg_path = os.path.join('.', 'model', 'cfg', 'yolov3.cfg')
 model_weights_path = os.path.join('.', 'model', 'weights', 'yolov3.weights')
 class_names_path = os.path.join('.', 'model', 'classes.names')
 
-input_dir = "data/result"
+input_dir = "data/final_images"
 output_dir = "results"
 for img_name in os.listdir(os.path.join(".", input_dir)):
     print("_____________________________________________________________")
