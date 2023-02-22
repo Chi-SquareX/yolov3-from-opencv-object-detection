@@ -33,6 +33,8 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
     # load image
 
     img = cv2.imread(img_path)
+    img = cv2.detailEnhance(img, sigma_s=10, sigma_r=0.15)
+    img = cv2.edgePreservingFilter(img, flags=1, sigma_s=60, sigma_r=0.4)
 
     H, W, _ = img.shape
 
