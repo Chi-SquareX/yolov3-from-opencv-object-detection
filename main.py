@@ -35,7 +35,7 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
     img = cv2.imread(img_path)
     img = cv2.detailEnhance(img, sigma_s=10, sigma_r=0.15)
     img = cv2.edgePreservingFilter(img, flags=1, sigma_s=60, sigma_r=0.4)
-
+    license_plate = []
     H, W, _ = img.shape
 
     # convert image
@@ -54,7 +54,6 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
     for detection in detections:
         # [x1, x2, x3, x4, x5, x6, ..., x85]
         bbox = detection[:4]
-
         xc, yc, w, h = bbox
         bbox = [int(xc * W), int(yc * H), int(w * W), int(h * H)]
 
@@ -89,20 +88,22 @@ for img_name in os.listdir(os.path.join(".", input_dir)):
                             (int(xc + (w / 2)), int(yc + (h / 2))),
                             (0, 255, 0),
                             10)
-        license_plate_gray = cv2.cvtColor(license_plate, cv2.COLOR_BGR2GRAY)
-        _, license_plate_threshold = cv2.threshold(license_plate_gray, 64, 255, cv2.THRESH_BINARY_INV)
-        output = reader.readtext(license_plate_threshold)
-        print(output)
-        print("________________________________________")
-        for out in output:
-            text_bbox, text, text_score = out
-            print(text, text_score)
+        if len(license_plate):
+          license_plate_gray = cv2.cvtColor(license_plate, cv2.COLOR_BGR2GRAY)
+          _, license_plate_threshold = cv2.threshold(license_plate_gray, 64, 255, cv2.THRESH_BINARY_INV)
+          output = reader.readtext(license_plate_threshold)
+          print(output)
+          print("________________________________________")
+          for out in output:
+              text_bbox, text, text_score = out
+              print(text, text_score)
 
-    plt.figure()
-    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    plt.savefig(os.path.join(".", output_dir, img_name.split(".")[0]) + "_detected" + ".jpg")
+    if len(license_plate):
+      plt.figure()
+      plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+      plt.savefig(os.path.join(".", output_dir, img_name.split(".")[0]) + "_detected" + ".jpg")
 
-    plt.figure()
-    plt.imshow(cv2.cvtColor(license_plate, cv2.COLOR_BGR2RGB))
-    plt.savefig(os.path.join(".", output_dir, "cropped_images", img_name.split(".")[0]) + "_detected_plate" + ".jpg")
-    plt.show()
+      plt.figure()
+      plt.imshow(cv2.cvtColor(license_plate, cv2.COLOR_BGR2RGB))
+      plt.savefig(os.path.join(".", output_dir, "cropped_images", img_name.split(".")[0]) + "_detected_plate" + ".jpg")
+      plt.show()
